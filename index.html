@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Divine Field Prototype · Modular Edition</title>
+  <link rel="stylesheet" href="./css/game.css" />
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="sigil">DF</div>
+      <div>
+        <h1>DIVINE FIELD <span style="color:#ff4fd8">NEON</span></h1>
+        <div class="subtitle">갓필드 스타일에서 영감을 받은 독자적 웹 배틀 프로토타입</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="rulesBtn">규칙</button>
+      <button class="btn primary" id="restartBtn">새 게임</button>
+    </div>
+  </header>
+
+  <main class="arena">
+    <section class="battle">
+      <div class="battle-fx" id="battleFx"></div>
+      <div class="combatant enemy" id="enemyBox">
+        <div class="portrait">☄️</div>
+        <div class="who">
+          <div class="name">적 AI</div>
+          <div class="state-line" id="enemyState">손패 9장</div>
+        </div>
+        <div class="hp-wrap">
+          <div class="hp-label"><span>HP</span><b id="enemyHpText">40 / 40</b></div>
+          <div class="hpbar"><div class="hpfill" id="enemyHpBar"></div></div>
+        </div>
+      </div>
+
+      <div class="center">
+        <div class="played-slot" id="enemyPlayedSlot">
+          <div class="slot-label"><span>상대 사용 카드</span><b>ENEMY</b></div>
+          <div id="enemyPlayed"><div class="played-empty">상대가 카드를 사용하면<br>여기에 크게 표시됩니다.</div></div>
+        </div>
+
+        <div class="turn-card">
+          <div class="turn-label" id="turnLabel">BATTLE START</div>
+          <div class="turn-title" id="turnTitle">당신의 턴</div>
+          <div class="turn-help" id="turnHelp">카드를 선택하면 중앙에 크게 표시됩니다.</div>
+        </div>
+
+        <div class="played-slot" id="playerPlayedSlot">
+          <div class="slot-label"><span>내 사용 카드</span><b>YOU</b></div>
+          <div id="playerPlayed"><div class="played-empty">내가 사용한 카드가<br>여기에 크게 표시됩니다.</div></div>
+        </div>
+      </div>
+
+      <div class="combatant" id="playerBox">
+        <div class="portrait">🜂</div>
+        <div class="who">
+          <div class="name">플레이어</div>
+          <div class="state-line" id="playerState">손패 9장</div>
+        </div>
+        <div class="hp-wrap">
+          <div class="hp-label"><span>HP</span><b id="playerHpText">40 / 40</b></div>
+          <div class="hpbar"><div class="hpfill" id="playerHpBar"></div></div>
+        </div>
+      </div>
+
+      <div class="hand-zone" id="handZone">
+        <div class="defense-inline" id="defenseInline">
+          <div class="def-copy">
+            <div class="def-title" id="defenseInlineTitle">방어 카드를 선택하세요</div>
+            <div class="def-desc" id="defenseInlineDesc">형광색으로 강조된 방어 카드만 선택할 수 있습니다.</div>
+          </div>
+          <button class="skip-defense" id="skipDefenseBtn">방어하지 않기</button>
+        </div>
+        <div class="hand-head">
+          <div class="hand-title">내 손패</div>
+          <div class="hand-count">그림과 형광색으로 카드 종류를 빠르게 구분할 수 있습니다.</div>
+        </div>
+        <div class="hand" id="hand"></div>
+      </div>
+    </section>
+
+    <aside class="side">
+      <section class="panel">
+        <h2>전투 상태</h2>
+        <div class="stats">
+          <div class="stat"><div class="k">턴</div><div class="v" id="turnNum">1</div></div>
+          <div class="stat"><div class="k">내 손패</div><div class="v" id="handNum">9</div></div>
+          <div class="stat"><div class="k">적 손패</div><div class="v" id="enemyHandNum">9</div></div>
+          <div class="stat"><div class="k">상태</div><div class="v" id="statusIcon">⚔</div></div>
+        </div>
+        <div class="legend" style="margin-top:13px">
+          <span class="legend-item"><i class="legend-dot attack"></i>공격</span>
+          <span class="legend-item"><i class="legend-dot defense"></i>방어</span>
+          <span class="legend-item"><i class="legend-dot heal"></i>회복</span>
+          <span class="legend-item"><i class="legend-dot special"></i>특수</span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>전투 기록</h2>
+        <div class="log" id="log"></div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<div class="overlay" id="infoOverlay">
+  <div class="modal">
+    <h3 id="infoTitle">규칙</h3>
+    <div id="infoBody">
+      <p>
+        서로 HP 40으로 시작합니다. 매 턴 손패에서 카드 한 장을 사용하고, 사용한 카드는 즉시 새 카드로 보충됩니다.
+        공격을 받으면 손에 방어 카드가 있을 경우 대응해서 피해를 줄일 수 있습니다.
+      </p>
+      <p>
+        <b>관통 공격</b>은 방어를 무시합니다. <b>흡혈</b>은 준 피해 일부를 회복합니다.
+        먼저 상대 HP를 0으로 만들면 승리합니다.
+      </p>
+    </div>
+    <button class="btn primary" id="closeInfoBtn" style="width:100%">확인</button>
+  </div>
+</div>
+
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>
